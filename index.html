@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pokedex</title>
+  </head>
+  <body>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      main {
+        width: 55vw;
+        height: 80vh;
+        position: relative;
+        margin: 10vh auto;
+      }
+      #imgPoke {
+        top: 22%;
+        left: 9%;
+        width: 200px;
+        position: absolute;
+      }
+      #pokemonName {
+        width: 25%;
+        right: 3em;
+        top: 37%;
+        position: absolute;
+        text-align: center;
+        background-color: white;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      #pokemonName::first-letter {
+        text-transform: uppercase;
+      }
+      #inputId {
+        left: 12%;
+        bottom: 10%;
+        width: 115px;
+        height: 50px;
+        border: none;
+        text-align: center;
+        position: absolute;
+      }
+      #inputId:focus {
+        outline: none;
+      }
+      #btn {
+        left: 7%;
+        border: none;
+        bottom: 26%;
+        color: white;
+        background: none;
+        position: absolute;
+        cursor: pointer;
+      }
+      #btn:focus {
+        outline: none;
+      }
+      @media screen and (max-width: 480px) {
+        main {
+          width: 210vw;
+          height: 90vh;
+          margin: 20vh 5px;
+        }
+        #btn {
+          bottom: 28%;
+        }
+        #inputId {
+          bottom: 13%;
+        }
+      }
+    </style>
+    <main>
+      <img id="img-back" src="pokedexBackground.jpg.png" alt="" />
+      <h1 id="pokemonName"></h1>
+      <img id="imgPoke" src="" alt="" />
+      <input type="text" id="inputId" placeholder="ID or Name Pokemon" />
+      <button id="btn">OK</button>
+    </main>
+
+    <script>
+      /* Me conecto a la API de forma asinconica */
+      async function getPokemon(id) {
+        const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`);
+        return await res.json();
+      }
+      /* Funcion iniciadora con pokemon por default */
+      async function firstPokemonDefault() {
+        const pokemon = await getPokemon(150);
+        printPokemon(pokemon);
+      }
+      firstPokemonDefault();
+
+      /* imprime el pokemon */
+      function printPokemon(pokemon) {
+        window.pokemonName.textContent = pokemon.name;
+        window.imgPoke.setAttribute("src", pokemon.sprites.front_default);
+      }
+
+      /* Evento que cambia al pokemon que el usuario quiere */
+      window.inputId.addEventListener("keyup", async (event) => {
+        if ("13" == event.which) {
+          if (window.inputId.value >= 894) {
+            alert("Este pokemon no existe");
+          } else {
+            const pokemon = await getPokemon(window.inputId.value);
+            printPokemon(pokemon);
+          }
+        }
+      });
+
+      /* Evento para escuchar el bottom OK */
+      window.btn.addEventListener("click", async (event) => {
+        if (window.inputId.value >= 894) {
+          alert("Este pokemon no existe");
+        } else {
+          const pokemon = await getPokemon(window.inputId.value);
+          printPokemon(pokemon);
+        }
+      });
+    </script>
+  </body>
+</html>
